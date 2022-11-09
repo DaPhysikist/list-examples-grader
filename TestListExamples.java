@@ -36,6 +36,6 @@ public void testMerge(){
   list2.add("ball");
   list2.add("cat");
   list2.add("zebra");
-  assertEquals(new ArrayList<>(List.of("apple", "ball", "cat", "orange", "why", "zebra")), ListExamples.merge(list1, list2));
+  assertEquals(new ArrayList<>(){{ add("apple"); add("ball"); add("cat"); add("orange"); add("why"); add("zebra"); }}, ListExamples.merge(list1, list2));
 }
 }
