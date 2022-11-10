@@ -29,7 +29,7 @@ fi
 
 java -cp $CPATH  org.junit.runner.JUnitCore TestListExamples 2> errors.txt
 
-if [[ -f "errors.txt" ]]
+if [[ -e "errors.txt" ]]
 then
     result1 = $(grep -c "testFilter(TestListExamples)" errors.txt)
     result2 = $(grep -c "testMerge(TestListExamples)" errors.txt)
