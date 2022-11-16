@@ -31,17 +31,14 @@ java -cp $CPATH  org.junit.runner.JUnitCore TestListExamples 2> errors.txt
 
 if [[ -e "errors.txt" ]]
 then
-    result1 = $(grep -c "testFilter(TestListExamples)" errors.txt)
-    result2 = $(grep -c "testMerge(TestListExamples)" errors.txt)
-
-    if [[ $result1 -eq 1 ]]
+    if [[ $(grep -c "testFilter(TestListExamples)" errors.txt) -eq 1 ]]
     then
         ((totalPoints-=1))
         let "totalPoints-=1"
         echo "[FAILED 0/1] testFilter"
     fi
 
-    if [[ $result2 -eq 1 ]]
+    if [[ $(grep -c "testMerge(TestListExamples)" errors.txt) -eq 1 ]]
     then
         ((totalPoints-=1))
         let "totalPoints-=1"
