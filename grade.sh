@@ -27,16 +27,16 @@ else
     exit 2
 fi
 
-java -cp $CPATH  org.junit.runner.JUnitCore TestListExamples 2> errors.txt
+java -cp $CPATH  org.junit.runner.JUnitCore TestListExamples > errors.txt
 
-if [[grep -c "testFilter(TestListExamples)" errors.txt | -eq 1]]
+if [[ $(grep -c "testFilter(TestListExamples)" errors.txt) -eq 1 ]]
 then
      ((totalPoints-=1))
     let "totalPoints-=1"
     echo "[FAILED 0/1] testFilter"
 fi
 
-if [[grep -c "testMerge(TestListExamples)" errors.txt | -eq 1]]
+if [[ $(grep -c "testMerge(TestListExamples)" errors.txt) -eq 1 ]]
 then
     ((totalPoints-=1))
     let "totalPoints-=1"
