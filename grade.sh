@@ -1,48 +1,52 @@
 # Create your grading script here
 
 CPATH=".:../lib/hamcrest-core-1.3.jar:../lib/junit-4.13.2.jar"
-file="TestListExamples.java"
+file="student-submission/ListExamples.java"
 totalPoints=2
 
 rm -rf student-submission
 git clone $1 student-submission
 cp TestListExamples.java student-submission/
-cd student-submission
 
 if [[ -f $file ]] && [[ -e $file ]]
 then
     echo "File exists!"
 else
     echo "File not found!"
+    echo "Total Points: 0/2"
     exit 1
 fi
 
-javac -cp $CPATH *.java
+cd student-submission
 
-if [[ $? -eq 0 ]]
+javac -cp $CPATH ListExamples.java 2>> errors.txt 
+
+javac -target 1.8  -cp $CPATH -Xdiags:verbose TestListExamples.java 2>> errors.txt  
+
+java -cp $CPATH  org.junit.runner.JUnitCore TestListExamples > failures.txt
+
+if [[ $(grep -c "error: method filter" errors.txt) -ne 0 ]]
 then
-    echo "Compile succeeded"
-else
-    echo "Your program didn't compile"
-    exit 2
-fi
-
-java -cp $CPATH  org.junit.runner.JUnitCore TestListExamples > errors.txt
-
-if [[ $(grep -c "testFilter(TestListExamples)" errors.txt) -eq 1 ]]
+    let "totalPoints-=1"
+    echo "[EXCEPT 0/1] testFilter"
+elif [[ $(grep -c "testFilter(TestListExamples)" failures.txt) -ne 0 ]]
 then
-     ((totalPoints-=1))
     let "totalPoints-=1"
     echo "[FAILED 0/1] testFilter"
+else
+    echo "[PASSED 1/1] testFilter"
 fi
 
-if [[ $(grep -c "testMerge(TestListExamples)" errors.txt) -eq 1 ]]
+if [[ $(grep -c "error: method merge" errors.txt) -ne 0 ]]
 then
-    ((totalPoints-=1))
+    let "totalPoints-=1"
+    echo "[EXCEPT 0/1] testMerge"
+elif [[ $(grep -c "testMerge(TestListExamples)" failures.txt) -ne 0 ]]
+then
     let "totalPoints-=1"
     echo "[FAILED 0/1] testMerge"
+else
+    echo "[PASSED 1/1] testMerge"
 fi
 
-echo Total Grade: $totalPoints/2
-
-
+echo "Total Points: $totalPoints/2"
